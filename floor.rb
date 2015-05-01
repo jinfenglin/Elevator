@@ -5,6 +5,7 @@ class Floor
 		@building=building
 		@id=floor_id
 		@people=[]
+		@maximal=50
 		@call_buttons={} #key is the elvator id, value is a pair of boolean, initial them all to false
 		self.initial_button()
 	end
@@ -43,7 +44,10 @@ class Floor
 	def add_person(person)
 		people.push(person)
 	end
+	def space()
+		@maximal-@people.length
 
+	end
 	def display()
 		puts "-------floor #{@id}---------"
 		puts "people in queue #{@people.length}"

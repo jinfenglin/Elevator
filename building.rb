@@ -51,7 +51,7 @@ class Building
 	end
 
 	#add one more elevator
-	def extend_elevator
+	def extend_elevator()
 		@elev_num+=1
 		elevator=Elevator.new(@elev_num-1,self)
 		@elev_hash[@elev_num-1]=elevator
@@ -63,17 +63,27 @@ class Building
 	# the person instance
 	def add_person(person)
 		current_floor = @floor_hash[person.current_floor]
-		current_floor.add_person(person)
+		if current_floor.space>0
+			current_floor.add_person(person)
+		end
+	end
+
+	def add_people(people)
+		people.each do |person|
+			self.add_person(person)
+		end
 	end
 
 
 	def clock_tick()
+		
 		@floor_hash.each do |id,floor|
 			floor.clock_tick()
-		end 
+		end
 		@elev_hash.each do |id,elevator|
 			elevator.clock_tick()
 		end 
+		
 	end
 	
 	def display()

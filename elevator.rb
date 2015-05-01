@@ -34,7 +34,7 @@ class Elevator
 				@request_calls.delete(floor_id)
 			end
 		end
-
+		
 		if up_count+down_count==0
 			@status="STOP"
 		elsif up_count>down_count
@@ -43,31 +43,39 @@ class Elevator
 			@status="DOWNWARD"
 		end
 	end
-	def clock_tick()
-		#people on board make request call, if have arrived get off elevator
+
+	def move()
+		#let the elevator move
+		if @status == 'UPWARD' and @current_floor+1<@building.floor_num
+			@current_floor+=1
+		elsif @status == "DOWNWARD"and @current_floor-1>=0
+			@current_floor-=1			
+		end
+	end
+
+	def load_off()
 		temp_people=[]
 		(0..@people.length-1).each  do |count|
-			
+
 			temp_person=@people.shift()
-			dest=temp_person.target_floor()
-			puts "dest is #{dest},current floor is #{@current_floor}"
+			dest=temp_person.target_floor()	
 			if dest != @current_floor
 				temp_people.push(temp_person)
 				self.add_request(dest)
 			end
 		end
 		@people=temp_people
+
+	end
+
+	def clock_tick()	
 		#update the elevator's status, if the request on elevator queue is mostly going upward, then go upward
 		#else go downward, if no request, then stay
+		self.move()
+		self.load_off()		
 		self.direction_decision()
-		#let the elevator move
-		if @status == 'UPWARD'
-			@current_floor+=1
-		elsif @status == "DOWNWARD"
-			@current_floor-=1			
-		end
-			
 	end
+	
 	def get_floor()
 		floors=@building.floor_hash
 	end

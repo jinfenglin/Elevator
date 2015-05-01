@@ -16,6 +16,23 @@ describe "test floor" do
 
 	end
 
+	it "test space" do 
+		building=Building.new(3,1)
+		floor=building.floor_hash[0]
+		assert_equal(floor.space,50)
+		person=Person.new(0,2)
+		building.add_person(person)
+		assert_equal(floor.space,49)
+
+		people=[]
+		(0..60).each do |count|
+			people.push(Person.new(0,2))
+		end
+		building.add_people(people)
+		assert_equal(floor.space,0)
+
+	end
+
 	it "test initial_button" do
 		floor=Floor.new(0,Building.new(3,1))
 		floor.call_buttons.each do |id,pair|

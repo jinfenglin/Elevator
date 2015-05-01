@@ -5,4 +5,5 @@ class Person
 		@current_floor=current_floor
 		@target_floor=target_floor
 	end
+
 end
