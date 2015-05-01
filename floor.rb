@@ -1,5 +1,6 @@
 class Floor
 	attr_accessor :people
+	attr_accessor :call_buttons
 	def initialize(floor_id,building)#building is the overall background 
 		@building=building
 		@id=floor_id
@@ -13,7 +14,7 @@ class Floor
 		button=@call_buttons[elev_id]
 		if direction=="DOWNWARD"
 			button[0]=true
-		else
+		elsif direction=="UPWARD"
 			button[1]=true
 		end
 	
@@ -45,7 +46,7 @@ class Floor
 
 	def display()
 		puts "-------floor #{@id}---------"
-		puts "people in queue #{@people}"
+		puts "people in queue #{@people.length}"
 		puts "call button #{@call_buttons}"
 	end
 	def up_or_down(current_floor,target_floor)
@@ -58,7 +59,7 @@ class Floor
 	def load(elevator)
 		space=elevator.space()
 		(1..space).each do 
-			if not @people.empty?
+			if not @people.empty?()
 				person=@people.pop()
 				elevator.load(person)
 			end
@@ -66,7 +67,7 @@ class Floor
 	end
 
 	def clock_tick()
-		#load people to elevator if there is any elevator available
+		#load people to elevator
 		elevators=self.get_elevator()
 		elevators.each do |id,elevator|
 			if elevator.current_floor ==@id
@@ -77,7 +78,7 @@ class Floor
 		elevator_num=@building.elev_num
 		people.each do |person|
 			direction=up_or_down(@id,person.target_floor)
-			(0..elevator_num-1).each do |elevator_id| # push button on every elevator
+			(0..elevator_num-1).each do |elevator_id| # yeah, I will push every button, because I am eager!
 				self.set_call(elevator_id,direction)
 				self.send_request(elevator_id)
 			end			

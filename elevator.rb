@@ -1,6 +1,8 @@
 class Elevator
 	attr_accessor :status #moving upward, downward, or stationary
 	attr_accessor :current_floor
+	attr_accessor :request_calls
+	attr_accessor :people
 	def initialize(elevator_id,building)
 		@building=building
 		@maximal_num=10
@@ -20,28 +22,44 @@ class Elevator
 	def add_request(floor_id)
 		@request_calls[floor_id]=1
 	end
-	def clock_tick()
-		#people on board make request call
-		@people.each do |person|
-			dest=person.target_floor
-			if dest==current_floor
-				@people.delete(person)
-			else
-				self.add_request(dest)
-			end
-		end
-		#update the elevator's status, if the request on elevator queue is mostly going upward, then go upward
-		#else go downward, if no request, then stay
-		@request_calls.each do |floor_id,value|
+	def direction_decision()
+		up_count=0
+		down_count=0
+		@request_calls.each do |floor_id, value|
 			if floor_id > @current_floor
-				@status="UPWARD"
+				up_count+=1
 			elsif floor_id <@current_floor
-				@status="DOWNWARD"
+				down_count+=1
 			else
-				@status="STOP"
 				@request_calls.delete(floor_id)
 			end
 		end
+
+		if up_count+down_count==0
+			@status="STOP"
+		elsif up_count>down_count
+			@status="UPWARD"
+		else 
+			@status="DOWNWARD"
+		end
+	end
+	def clock_tick()
+		#people on board make request call, if have arrived get off elevator
+		temp_people=[]
+		(0..@people.length-1).each  do |count|
+			
+			temp_person=@people.shift()
+			dest=temp_person.target_floor()
+			puts "dest is #{dest},current floor is #{@current_floor}"
+			if dest != @current_floor
+				temp_people.push(temp_person)
+				self.add_request(dest)
+			end
+		end
+		@people=temp_people
+		#update the elevator's status, if the request on elevator queue is mostly going upward, then go upward
+		#else go downward, if no request, then stay
+		self.direction_decision()
 		#let the elevator move
 		if @status == 'UPWARD'
 			@current_floor+=1
@@ -59,6 +77,6 @@ class Elevator
 		puts "current floor:#{@current_floor}"
 		puts "status:#{@status}"
 		puts "request queue: #{@request_calls}"
-		puts "peopel: #{@people}"
+		puts "peopel: #{@people.length}"
 	end
 end

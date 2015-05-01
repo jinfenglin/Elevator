@@ -25,6 +25,7 @@ class Building
 
 	end
 
+
 	#build up a brand new building! Roll up your sleeve and make your hand dirty
 	def initial_floors()
 		self.init_hash(@floor_num,Floor,@floor_hash)		
@@ -45,8 +46,16 @@ class Building
 	#we already have
 	def extend_floor()
 		@floor_num+=1
-		floor=Floor.new(@floor_num-1)
+		floor=Floor.new(@floor_num-1,self)
 		@floor_hash[floor_num-1]=floor
+	end
+
+	#add one more elevator
+	def extend_elevator
+		@elev_num+=1
+		elevator=Elevator.new(@elev_num-1,self)
+		@elev_hash[@elev_num-1]=elevator
+
 	end
 	
 
