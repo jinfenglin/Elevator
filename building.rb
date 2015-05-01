@@ -16,7 +16,8 @@ class Building
 		initial_elev()
 	end
 
-	#abstraction for initializing floor and elveator
+	## Abstraction for initializing floor and elveator
+	#
 	def init_hash(num,class_name,hash)
 		(0..num-1).each do |id|
 			ins=class_name.new(id,self)
@@ -25,25 +26,21 @@ class Building
 
 	end
 
-
-	#build up a brand new building! Roll up your sleeve and make your hand dirty
 	def initial_floors()
 		self.init_hash(@floor_num,Floor,@floor_hash)		
 	end
 
-	#build up a new elevator
 	def initial_elev()
 		self.init_hash(@elev_num,Elevator,@elev_hash)		
 	end
-	#expecting a list of person object, distribute person the floor
 	def initial_peopel(people)
 		people.each do |person|
 			self.add_person(person)
 		end
 	end
 
-	#add one more floor in the current building,ites floor_id depends on how many floors
-	#we already have
+	## Add one more floor in the current building,ites floor_id depends on how many floors we already have
+	#
 	def extend_floor()
 		@floor_num+=1
 		floor=Floor.new(@floor_num-1,self)
@@ -59,8 +56,8 @@ class Building
 	end
 	
 
-	# Add a single person to a floor, which is decided by the information inside
-	# the person instance
+	## Add a single person to a floor, which is decided by the information inside
+	#  the person instance
 	def add_person(person)
 		current_floor = @floor_hash[person.current_floor]
 		if current_floor.space>0
